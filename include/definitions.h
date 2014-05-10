@@ -1,7 +1,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#define resx (800)
-#define resy (600)
+#define resolution_x 800
+#define resolution_y 800
 
 #endif

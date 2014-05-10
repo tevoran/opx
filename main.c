@@ -6,20 +6,23 @@
 void main()
 {
   //Setting up OPX
-  opx_init(resx,resy,32);
+  opx_init(resolution_x,resolution_y,32);
 
   //creating player
   struct opx_vector_float player;
     player.x=0;
     player.y=0;
-    player.z=0;
+    player.z=3;
+    float anglexz=pi/2+0.5;
+    float anglexy=-0.4;
 
-    int i=9;
-    for(i;i>0;i--)
+   while(1)
       {
-       	opx_render(player,resx,resy,32);
-	player.z++;
-	SDL_Delay(500);
+	//anglexz=anglexz-0.02;
+	//anglexy=anglexy+0.0001;
+       	opx_render(player,anglexy,anglexz,resolution_x,resolution_y);
+	//SDL_Delay(500);
+	//break;
       }
 
 }
