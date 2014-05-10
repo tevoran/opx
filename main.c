@@ -18,11 +18,7 @@ void main()
 
    while(1)
       {
-	//anglexz=anglexz-0.02;
-	//anglexy=anglexy+0.0001;
        	opx_render(player,anglexy,anglexz,resolution_x,resolution_y);
-	//SDL_Delay(500);
-	//break;
       }
 
 }

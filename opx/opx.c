@@ -35,9 +35,8 @@ void opx_init(int resx, int resy, int colordepth)
     printf("OPX: screen video mode set\n");
 }
 
-//should be resx/resy=4/3
-//viewdirection contains just angles
-//fieldofview contains just one angle
+//should be resx/resy=1
+//all angles are in radian
 void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int resx,int resy)
 {
   //making angles<2pi
