@@ -5,10 +5,9 @@ OPX:=$(wildcard opx/*.c)
 OBJECTS:=$(wildcard obj/*.o)
 OBJECTS_OPX:=$(wildcard *.o)
 
-first :
+first : obj screenshots
 	mkdir obj
 	mkdir screenshots
-	rm *.o
 
 main : main_ opx_
 	$(CC) $(OBJECTS) -o main $(CFLAGS)
@@ -20,7 +19,7 @@ opx_ : $(OPX)
 	$(CC) $(OPX) -c $(CFLAGS)
 	@mv *.o obj/
 
-.PHONY : clean clean_main first
+.PHONY : clean clean_main
 clean :
 	rm $(OBJECTS)
 
