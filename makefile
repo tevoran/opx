@@ -1,19 +1,23 @@
 CC=gcc
 CFLAGS=`sdl-config --cflags --libs`
-SOURCES=*.c
-OPX=opx/*.c
-OBJECTS=obj/*.o
-main : obj/main.o obj/opx.o
+SOURCES:=$(wildcard *.c)
+OPX:=$(wildcard opx/*.c)
+OBJECTS:=$(wildcard obj/*.o)
+OBJECTS_OPX:=$(wildcard *.o)
+
+main : main_ opx_
 	$(CC) $(OBJECTS) -o main $(CFLAGS)
 
-obj/main.o : $(SOURCES)
-	$(CC) $(SOURCES) -c -o obj/main.o $(CFLAGS)
+main_ : $(SOURCES)
+	$(CC) $(SOURCES) -c $(CFLAGS)
 
-obj/opx.o : $(OPX)
-	$(CC) $(OPX) -c -o obj/opx.o $(CFLAGS)
+opx_ : $(OPX)
+	$(CC) $(OPX) -c $(CFLAGS)
+	@mv *.o obj/
 
-clear :
+.PHONY : clean clean_main
+clean :
 	rm $(OBJECTS)
 
-clear_main :
+clean_main :
 	rm main
