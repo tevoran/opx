@@ -1,0 +1,17 @@
+Welcome to my project OPX.
+
+If you want to compile this the first time,
+then you should have installed the library SDL
+and a suitable environment for gcc and make.
+
+After this is checked you can use the makefile.
+First type: "make first"
+Followed by: "make main" twice
+At least you can use the programm by starting
+the "main" file.
+
+I will try in the future to improve my project
+for the use by others.
+
+Greetings,
+tevoran aka Johannes Pfeiffer
