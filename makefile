@@ -5,7 +5,7 @@ OPX:=$(wildcard opx/*.c)
 OBJECTS:=$(wildcard obj/*.o)
 OBJECTS_OPX:=$(wildcard *.o)
 
-first : obj screenshots
+first :
 	mkdir obj
 	mkdir screenshots
 
