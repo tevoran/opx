@@ -14,20 +14,6 @@ struct planet sphere;
   //vision ray
   struct opx_vector_float vision;
 
-double opx_cos(double number)
-{
-  double x;
-  x=1-number*number/2+number*number*number*number/24;
-  return x;
-}
-
-double opx_sin(double number)
-{
-  double x;
-  x=number-(number*number*number/6)+(number*number*number*number*number/120);
-  return x;
-}
-
 void opx_init(int resx, int resy, int colordepth)
 {
   //Set screen
@@ -40,11 +26,11 @@ void opx_init(int resx, int resy, int colordepth)
 void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int resx,int resy)
 {
   //making angles<2pi
-  while(anglexz>2*pi)
+  while(anglexz>=2*pi)
     {
       anglexz=anglexz-2*pi;
     }
-  while(anglexy>2*pi)
+  while(anglexy>=2*pi)
     {
       anglexy=anglexy-2*pi;
     }
@@ -60,7 +46,8 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
   //runtime variables
   int x=0;
   int y=0;
-  float a,b,c,d;
+  float a,b,c,d;//variables for the abc formula
+  float x1;//the result of the abc formula
 
   //intersection variables
   c=(player.x-sphere.x)*(player.x-sphere.x)+(player.y-sphere.y)*(player.y-sphere.y)+(player.z-sphere.z)*(player.z-sphere.z)-(sphere.r*sphere.r);
@@ -75,13 +62,17 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
       a=1+vision.y*vision.y;//vision.x*vision.x+vision.y*vision.y+vision.z*vision.z;
       b=2*((player.x-sphere.x)*vision.x+(player.y-sphere.y)*vision.y+(player.z-sphere.z)*vision.z);
       d=b*b-4*a*c; //discriminant
-      
-      if(d>=0 && -b)
+
+      if(d>=0)
 	{
-	  //draw pixel
-	  pixel.x=x;
-	  pixel.y=y;
-	  SDL_FillRect(screen,&pixel,SDL_MapRGB(screen->format,0,200,10));
+	  x1=(-b-opx_sqrt(d))/(2*a);
+	  if(x1>0)
+	    {
+	      //draw pixel
+	      pixel.x=x;
+	      pixel.y=y;
+	      SDL_FillRect(screen,&pixel,SDL_MapRGB(screen->format,0,200,30));
+	    }
 	}
 	  //continue with next pixel
 	  x++;
@@ -89,13 +80,12 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
 	    {
 	      x=0;
 	      y++;
-
 	    }
 	  if(y==resy)
 	    {
 	      y=0;
 	      SDL_Flip(screen);
-	      //SDL_SaveBMP(screen,"screenshots/screen10-5-14.bmp");
+	      //SDL_SaveBMP(screen,"screenshots/screen11-5-14.bmp");
 	      //CLS
 	      SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));
 	      break;
