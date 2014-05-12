@@ -29,14 +29,15 @@
   };
 
 //math functions
-double opx_cos(double number);
-double opx_sin(double number);
-double opx_sqrt(double number);
+float opx_cos(float number);
+float opx_sin(float number);
+float opx_sqrt(float number);
 long long opx_factorial(int number);
-double opx_exponentiation(double number,int power);
+float opx_exponentiation(float number,int power);
 
 //engine functions
 void opx_init(int resx, int resy, int colordepth);
-void opx_render(struct opx_vector_float player,float anglexy,float anglexz, int resx, int resy);
+void opx_render(struct opx_vector_float player,float anglexy,float anglexz, int resx, int resy,int screenshot);
+float opx_intersect_vector_sphere(struct opx_vector_float start,struct opx_vector_float vector,struct planet planet);
 
 #endif

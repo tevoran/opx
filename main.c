@@ -11,17 +11,14 @@ void main()
   //creating player
   struct opx_vector_float player;
     player.x=0;
-    player.y=0;
-    player.z=8.30;
+    player.y=1.005;
+    player.z=10;
     float anglexz=pi/2;
-    float anglexy=0.5;
+    float anglexy=0;
 
    while(1)
       {
-       	opx_render(player,anglexy,anglexz,resolution_x,resolution_y);
-	//SDL_Delay(500);
-	//anglexz=anglexz+0.2;
-	//player.z=player.z++;
+        opx_render(player,anglexy,anglexz,resolution_x,resolution_y,1);
 	break;
       }
 

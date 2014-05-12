@@ -1,26 +1,6 @@
 #include "opx.h"
 
-double opx_cos(double number)
-{
-  int sign=1;
-  while(number>pi)
-    {
-      number=number-pi;
-      sign=sign*(-1);
-      }
-  int i=0;
-  double x=0;
-  for(i;i<icos;i++)
-    {
-      x=x+(opx_exponentiation(-1,i)*opx_exponentiation(number,2*i)/opx_factorial(2*i));
-    }
-  x=x*(double)sign;
-  return x;
-}
-
-
-//calculating sine by using productsums
-double opx_sin(double number)
+float opx_cos(float number)
 {
   int sign=1;
   while(number>pi)
@@ -29,8 +9,28 @@ double opx_sin(double number)
       sign=sign*(-1);
       }
   int i=1;
-  double x=number;
-  double y=1;
+  float y=1;
+  for(i;i<icos;i++)
+    {
+      y=y*(1-(4*number*number)/((2*i-1)*(2*i-1)*pi*pi));
+    }
+  y=y*(float)sign;
+  return y;
+}
+
+
+//calculating sine by using productsums
+float opx_sin(float number)
+{
+  int sign=1;
+  while(number>pi)
+    {
+      number=number-pi;
+      sign=sign*(-1);
+      }
+  int i=1;
+  float x=number;
+  float y=1;
   if(number==0)
     {
       return x;
@@ -41,7 +41,7 @@ double opx_sin(double number)
 	{
 	  y=y*(1-(number*number)/(i*i*pi*pi));
 	}
-      x=x*y*(double)sign;
+      x=x*y*(float)sign;
     }
   return x;
 }
@@ -63,9 +63,9 @@ long long opx_factorial(int number)
   return x;
 }
 
-double opx_exponentiation(double number,int power)
+float opx_exponentiation(float number,int power)
 {
-  double x=1;
+  float x=1;
   if(power==0)
     {
       x=1;
@@ -84,10 +84,10 @@ double opx_exponentiation(double number,int power)
 }
 
 //calculating squareroots by the babylonian method
-double opx_sqrt(double number)
+float opx_sqrt(float number)
 {
   int i=isqrt;//defines quality of sqareroot
-  double x;
+  float x;
   if(number==0)
     {
       x=0;
