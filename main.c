@@ -12,14 +12,15 @@ void main()
   struct opx_vector_float player;
     player.x=0;
     player.y=1.005;
-    player.z=10;
+    player.z=9.95;
     float anglexz=pi/2;
     float anglexy=0;
 
    while(1)
       {
-        opx_render(player,anglexy,anglexz,resolution_x,resolution_y,1);
-	break;
+        opx_render(player,anglexy,anglexz,resolution_x,resolution_y,0);
+	//player.z=player.z-0.01;
+	//break;
       }
 
 }
