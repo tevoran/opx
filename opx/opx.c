@@ -6,7 +6,7 @@ SDL_Surface *screen;
 SDL_Rect pixel;
   
 //OPX variables
-int objects=2;
+int planets=1;
 
   //vision ray
   struct opx_vector_float vision;
@@ -14,11 +14,12 @@ int objects=2;
 struct planet sphere;
 struct star sun;
 
-void opx_init(int resx, int resy, int colordepth)
+void opx_init(int resx, int resy, int colordepth, int seed)
 {
   //Set screen
   screen=SDL_SetVideoMode(resx,resy,colordepth, SDL_HWSURFACE|SDL_DOUBLEBUF);
     printf("OPX: screen video mode set\n");
+
 }
 
 //should be resx/resy=1
@@ -38,29 +39,26 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
   //content
   sun.x=0;
   sun.y=0;
-  sun.z=100;
-  sun.r=10;
-  sun.color_r=230;
-  sun.color_g=130;
+  sun.z=15000;
+  sun.r=200;
+  sun.color_r=255;
+  sun.color_g=205;
   sun.color_b=20;
 
   sphere.x=0;
   sphere.y=0;
-  sphere.z=10;
-  sphere.r=1;
-  sphere.color_r=30;
-  sphere.color_g=30;
-  sphere.color_b=30;
-
-  pixel.x=0;
-  pixel.y=0;
-  pixel.w=1;
-  pixel.h=1;
+  sphere.z=0;
+  sphere.r=0.63;
+  sphere.color_r=50;
+  sphere.color_g=50;
+  sphere.color_b=200;
 
   //runtime variables
   int x=0; //pixels x
   int y=0; //pixels y
   int i=0; //object counter
+  int r,g,b; //latest colors
+  float l=0; //actual object
   float l_min=0; //nearest object
   float anglexz_now,anglexy_now;
 
@@ -77,21 +75,32 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
       //checking for intersection
       l_min=opx_intersect_vector_star(player,vision,sun);
       if(0<l_min)
-	{
-	  //draw pixel
-	  pixel.x=x;
-	  pixel.y=y;
-	  SDL_FillRect(screen,&pixel,SDL_MapRGB(screen->format,sun.color_r,sun.color_g,sun.color_b));
+      	{
+	  r=sun.color_r;
+	  g=sun.color_g;
+	  b=sun.color_b;
 	}
-      if(0<opx_intersect_vector_planet(player,vision,sphere))
+      else
 	{
-	  //draw pixel
-	  pixel.x=x;
-	  pixel.y=y;
-	  SDL_FillRect(screen,&pixel,SDL_MapRGB(screen->format,sphere.color_r,sphere.color_g,sphere.color_b));
+	  r=0;
+	  g=0;
+	  b=0;
 	}
-
-	  //continue with next pixel
+      i=0;
+      for(i;i<planets;i++)
+	{
+	  l=opx_intersect_vector_planet(player,vision,sphere);
+	  if((l_min==0 && l>0) || (l<l_min && l>0))
+	    {
+	      l=l_min;
+	      r=sphere.color_r;
+	      g=sphere.color_g;
+	      b=sphere.color_b;
+	    }
+	  
+	}
+      opx_pixel(x,y,r,g,b);
+      //continue with next pixel
 	  x++;
 	  if(x==resx)
 	    {
@@ -113,55 +122,12 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
     }
 }
 
-//this function checks if there is an intersection between a vector and a planet
-//it returns l times the length of "vector" if there is an intersection
-//if there is no intersection the 0 is returned
-float opx_intersect_vector_planet(struct opx_vector_float start,struct opx_vector_float vector,struct planet planet)
+
+void opx_pixel(int x,int y,int r,int g,int b)
 {
-  //the abc-formula is used
-  float a,b,c,d,l=0;
-  struct opx_vector_float dx; 
-    dx.x=start.x-planet.x;
-    dx.y=start.y-planet.y;
-    dx.z=start.z-planet.z;
-
-  a=vector.x*vector.x+vector.y*vector.y+vector.z*vector.z;
-  b=2*(dx.x*vector.x+dx.y*vector.y+dx.z*vector.z);
-  c=dx.x*dx.x+dx.y*dx.y+dx.z*dx.z-planet.r*planet.r;
-
-  //discriminant
-  d=b*b-4*a*c;
-
-  if(d>0)
-    {
-      l=(-b-opx_sqrt(d))/(2*a);
-    }
-  return l;
-}
-
-
-//this function checks if there is an intersection between a vector and a planet
-//it returns l times the length of "vector" if there is an intersection
-//if there is no intersection the 0 is returned
-float opx_intersect_vector_star(struct opx_vector_float start,struct opx_vector_float vector,struct star star_)
-{
-  //the abc-formula is used
-  float a,b,c,d,l=0;
-  struct opx_vector_float dx; 
-    dx.x=start.x-star_.x;
-    dx.y=start.y-star_.y;
-    dx.z=start.z-star_.z;
-
-  a=vector.x*vector.x+vector.y*vector.y+vector.z*vector.z;
-  b=2*(dx.x*vector.x+dx.y*vector.y+dx.z*vector.z);
-  c=dx.x*dx.x+dx.y*dx.y+dx.z*dx.z-star_.r*star_.r;
-
-  //discriminant
-  d=b*b-4*a*c;
-
-  if(d>0)
-    {
-      l=(-b-opx_sqrt(d))/(2*a);
-    }
-  return l;
+  pixel.x=x;
+  pixel.y=y;
+  pixel.w=1;
+  pixel.h=1;
+  SDL_FillRect(screen,&pixel,SDL_MapRGB(screen->format,r,g,b));
 }
