@@ -56,21 +56,30 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
   //runtime variables
   int x=0; //pixels x
   int y=0; //pixels y
+  int y_update=1; //check variable if y was updated
   int i=0; //object counter
-  int r,g,b; //latest colors
+  int r,g,b; //last colors
   float l=0; //actual object
   float l_min=0; //nearest object
-  float anglexz_now,anglexy_now;
+  float anglexz_now,anglexy_now; //latest angles of the vision ray
+  float anglexy_cos; //save value to save CPU time
 
   while(1)
     {
       //setting vision ray
-      anglexz_now=anglexz+pi/4-((pi/2)*(float)((float)x/(float)resx));
-      anglexy_now=anglexy+pi/4-((pi/2)*(float)((float)y/(float)resy));
+      //updating y of vision ray
+      if(y_update==1)
+	{
+	  anglexy_now=anglexy+pi/4-((pi/2)*(float)((float)y/(float)resy));
+	  anglexy_cos=opx_cos(anglexy_now);
+	  vision.y=opx_sin(anglexy_now);
+	  y_update=0;
+	}
 
-      vision.x=opx_cos(anglexy_now)*opx_cos(anglexz_now);
-      vision.z=opx_cos(anglexy_now)*opx_sin(anglexz_now);
-      vision.y=opx_sin(anglexy_now);
+      //updating x of vision ray
+      anglexz_now=anglexz+pi/4-((pi/2)*(float)((float)x/(float)resx));
+        vision.x=anglexy_cos*opx_cos(anglexz_now);
+	vision.z=anglexy_cos*opx_sin(anglexz_now);
 
       //checking for intersection
       l_min=opx_intersect_vector_star(player,vision,sun);
@@ -106,6 +115,7 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
 	    {
 	      x=0;
 	      y++;
+	      y_update=1; //changes update value so that y value of the vision gets updated
 	    }
 	  if(y==resy)
 	    {
