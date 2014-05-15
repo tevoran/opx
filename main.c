@@ -6,27 +6,37 @@
 void main()
 {
   //Setting up OPX
-  long seed=144253115;
+  long seed=823123574;
   opx_init(resolution_x,resolution_y,32,0);
+
+  //creating content
+  opx_add_star(0,0,15000,700,255,255,0,0);
+  opx_add_star(5000,1500,15000,130,150,50,0,1);
 
   //creating player
   struct opx_vector_float player;
     player.x=0;
-    player.y=0.630;
-    player.z=-0.002;
+    player.y=1;
+    player.z=-1;
     float anglexz=pi/2;
     float anglexy=0;
 
     int ltimer=SDL_GetTicks();
     int timer=0;
 
+    char *name;
+    //name=opx_name_gen(seed);
+    //printf("Universe: %s\nSeed: %ld\n",name,seed);
    while(1)
       {
 	timer=SDL_GetTicks();
           printf("Time per frame: %i ms\n",timer-ltimer);
+	  float FPS=(float)(float)1000/(float)(timer-ltimer);
+	  printf("FPS: %f\n",FPS);
 	ltimer=timer;
-        opx_render(player,anglexy,anglexz,resolution_x,resolution_y,0);
-	//player.y=player.y-0.002;
+        opx_render(player,anglexy,anglexz,resolution_x,resolution_y,1);
+	//player.z=player.z+0.001;
+	printf("z: %f\n",player.z);
 	//break;
       }
 
