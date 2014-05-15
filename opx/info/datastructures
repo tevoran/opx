@@ -1,0 +1,13 @@
+In this file is the documentation of the different data structures.
+
+
+star_collection:
+	//the numbers counts in longs
+	0|shows if star is present (1==present)
+	1|(float) location x
+	2|(float) location y
+	3|(float) location z
+	4|(float) radius
+	5|(int) color r
+	6|(int) color g
+	7|(int) color b

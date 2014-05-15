@@ -2,10 +2,11 @@
 #define OPX_H
 
 //quality
-#define icos 10 //defines the quality of cosine
+#define icos 7 //defines the quality of cosine
                 //must be <12 due to technical reasons
-#define isin 10 //defines the quality of sine
-#define isqrt 10 //defines the quality of squareroot
+#define isin 7 //defines the quality of sine
+#define isqrt 7 //defines the quality of squareroot
+#define max_stars 10 //defines the max number of stars
 
 //numbers
 #define pi 3.141592654
@@ -17,19 +18,6 @@
     float x;
     float y;
     float z;
-  };
-
-//struct star
-  struct star
-  {
-    float x;
-    float y;
-    float z;
-    float r; //radius
-    int color_r; //color r of rgb
-    int color_g;
-    int color_b;
-    int *planet1; //an index to the first planet of the solar system
   };
 
 //struct planet
@@ -52,6 +40,7 @@
   };
 
 //math functions
+long opx_random(long seed);
 float opx_cos(float number);
 float opx_sin(float number);
 float opx_sqrt(float number);
@@ -59,9 +48,15 @@ long long opx_factorial(int number);
 float opx_exponentiation(float number,int power);
 
 //engine functions
-void opx_init(int resx, int resy, int colordepth);
+void opx_add_star(float x,float y,float z,float radius,int r,int g,int b,int number);
+void opx_init(int resx, int resy, int colordepth, long seed);
 void opx_render(struct opx_vector_float player,float anglexy,float anglexz, int resx, int resy,int screenshot);
-float opx_intersect_vector_planet(struct opx_vector_float start,struct opx_vector_float vector,struct planet planet);
-float opx_intersect_vector_star(struct opx_vector_float start,struct opx_vector_float vector,struct star star_);
+void opx_pixel(int x,int y,int r,int g,int b);
 
+//intersections
+float opx_intersect_vector_planet(struct opx_vector_float start,struct opx_vector_float vector,struct planet planet);
+float opx_intersect_vector_star(struct opx_vector_float start,struct opx_vector_float vector,void *stars_collection);
+
+//content
+char* opx_name_gen(long seed);
 #endif

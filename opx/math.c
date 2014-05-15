@@ -31,6 +31,11 @@ float opx_cos(float number)
       number=number-pi;
       sign=sign*(-1);
     }
+  while(number<(-pi))
+    {
+      number=number+pi;
+      sign=sign*(-1);
+    }
   int i=1;
   float y=1;
   float number_square=number*number;
@@ -52,7 +57,12 @@ float opx_sin(float number)
     {
       number=number-pi;
       sign=sign*(-1);
-      }
+    }
+  while(number<(-pi))
+    {
+      number=number+pi;
+      sign=sign*(-1);
+    }
   int i=1;
   float x=number;
   float y=1;
@@ -117,7 +127,7 @@ float opx_sqrt(float number)
       x=(number+1)/2;
       for(i;i>0;i--)
 	{
-	  x=(x+number/x)/2;
+	  x=(x+(number/x))/2;
 	}
     }
   return x;

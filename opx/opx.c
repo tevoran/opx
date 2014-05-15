@@ -1,4 +1,5 @@
 #include "opx.h"
+#include <stdlib.h>
 #include <SDL/SDL.h>
 
 //SDL variables
@@ -6,19 +7,43 @@ SDL_Surface *screen;
 SDL_Rect pixel;
   
 //OPX variables
+void *stars_collection;
 int planets=1;
 
-  //vision ray
-  struct opx_vector_float vision;
+//vision ray
+struct opx_vector_float vision;
 
 struct planet sphere;
-struct star sun;
 
-void opx_init(int resx, int resy, int colordepth, int seed)
+void opx_add_star(float x,float y,float z,float radius,int r,int g,int b,int number)
+{
+  void *ptr;
+  ptr=(stars_collection+(number*8*sizeof(long)));
+  *(long*)ptr=1;
+    ptr=ptr+sizeof(long);
+  *(float*)ptr=x;
+    ptr=ptr+sizeof(long);
+  *(float*)ptr=y;
+    ptr=ptr+sizeof(long);
+  *(float*)ptr=z;
+    ptr=ptr+sizeof(long);
+  *(float*)ptr=radius;
+    ptr=ptr+sizeof(long);
+  *(int*)ptr=r;
+    ptr=ptr+sizeof(long);
+  *(int*)ptr=g;
+    ptr=ptr+sizeof(long);
+  *(int*)ptr=b;
+}
+
+void opx_init(int resx, int resy, int colordepth, long seed)
 {
   //Set screen
   screen=SDL_SetVideoMode(resx,resy,colordepth, SDL_HWSURFACE|SDL_DOUBLEBUF);
     printf("OPX: screen video mode set\n");
+
+  //creating memory space for the stars
+  stars_collection=malloc(8*sizeof(long)*max_stars);
 
 }
 
@@ -37,14 +62,6 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
     }
 
   //content
-  sun.x=0;
-  sun.y=0;
-  sun.z=15000;
-  sun.r=200;
-  sun.color_r=255;
-  sun.color_g=205;
-  sun.color_b=20;
-
   sphere.x=0;
   sphere.y=0;
   sphere.z=0;
@@ -58,6 +75,7 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
   int y=0; //pixels y
   int y_update=1; //check variable if y was updated
   int i=0; //object counter
+  int i_stars=0; //star counter
   int r,g,b; //last colors
   float l=0; //actual object
   float l_min=0; //nearest object
@@ -70,34 +88,46 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
       //updating y of vision ray
       if(y_update==1)
 	{
-	  anglexy_now=anglexy+pi/4-((pi/2)*(float)((float)y/(float)resy));
+	  anglexy_now=(anglexy+(pi/4))-((pi/2)*(float)((float)y/(float)resy));
 	  anglexy_cos=opx_cos(anglexy_now);
 	  vision.y=opx_sin(anglexy_now);
 	  y_update=0;
 	}
 
       //updating x of vision ray
-      anglexz_now=anglexz+pi/4-((pi/2)*(float)((float)x/(float)resx));
+      anglexz_now=(anglexz+(pi/4))-((pi/2)*(float)((float)x/(float)resx));
         vision.x=anglexy_cos*opx_cos(anglexz_now);
 	vision.z=anglexy_cos*opx_sin(anglexz_now);
 
       //checking for intersection
-      l_min=opx_intersect_vector_star(player,vision,sun);
-      if(0<l_min)
-      	{
-	  r=sun.color_r;
-	  g=sun.color_g;
-	  b=sun.color_b;
-	}
-      else
-	{
-	  r=0;
-	  g=0;
-	  b=0;
-	}
-      i=0;
-      for(i;i<planets;i++)
-	{
+	//checking for stars
+	i_stars=0;
+	r=0;
+	g=0;
+	b=0;
+	l_min=0;
+        for(i_stars;i_stars<max_stars;i_stars++)
+	  {
+	    if(1!=*(long*)(stars_collection+i_stars*(8*sizeof(long))))
+	      {
+		break;
+	      }
+	    l=opx_intersect_vector_star(player,vision,(stars_collection+i_stars*(8*sizeof(long))));
+	    if(l>0 && l_min==0)
+	      {
+		r=*(int*)(stars_collection+(i_stars*8*sizeof(long))+5*sizeof(long));
+		g=*(int*)(stars_collection+(i_stars*8*sizeof(long))+6*sizeof(long));
+		b=*(int*)(stars_collection+(i_stars*8*sizeof(long))+7*sizeof(long));
+		l_min=l;
+	      }
+	    if(l<l_min)
+	      {
+		r=*(int*)(stars_collection+(i_stars*8*sizeof(long))+5*sizeof(long));
+		g=*(int*)(stars_collection+(i_stars*8*sizeof(long))+6*sizeof(long));
+		b=*(int*)(stars_collection+(i_stars*8*sizeof(long))+7*sizeof(long));
+		l_min=l;
+	      }
+	  }
 	  l=opx_intersect_vector_planet(player,vision,sphere);
 	  if((l_min==0 && l>0) || (l<l_min && l>0))
 	    {
@@ -106,8 +136,6 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
 	      g=sphere.color_g;
 	      b=sphere.color_b;
 	    }
-	  
-	}
       opx_pixel(x,y,r,g,b);
       //continue with next pixel
 	  x++;
@@ -123,8 +151,8 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
 	      SDL_Flip(screen);
 	      if(screenshot==1)
 		{
-		  SDL_SaveBMP(screen,"screenshots/screen13-5-14.bmp");
-		  }
+		  SDL_SaveBMP(screen,"screenshots/screenshot.bmp");
+		}
 	      //CLS
 	      SDL_FillRect(screen,NULL,SDL_MapRGB(screen->format,0,0,0));
 	      break;
