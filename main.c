@@ -53,7 +53,7 @@ void main()
 	  float FPS=(float)(float)1000/(float)(timer-ltimer);
 	  printf("FPS: %f\n",FPS);
 	ltimer=timer;
-        opx_render(player,anglexy,anglexz,resolution_x,resolution_y,0);
+        opx_render(player,anglexy,anglexz,resolution_x,resolution_y);
         anglexz=anglexz+0.05;
 	//break;
       }

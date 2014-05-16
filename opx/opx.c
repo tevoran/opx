@@ -6,7 +6,6 @@
 
 //SDL variables
 SDL_Surface *screen;
-SDL_Rect pixel;
   
 //OPX variables
 void *stars_collection;
@@ -66,7 +65,7 @@ void opx_init(int resx, int resy, int colordepth)
 
 //should be resx/resy=1
 //all angles are in radian
-void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int resx,int resy,int screenshot)
+void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int resx,int resy)
 {
   //making angles<2pi
   while(anglexz>=2*pi)
@@ -159,31 +158,9 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
 	    {
 	      y=0;
 	      SDL_GL_SwapBuffers();
-	      if(screenshot==1)
-		{
-		  SDL_SaveBMP(screen,"screenshots/screenshot.bmp");
-		}
 	      //CLS
 	      opx_cls();
 	      break;
 	    }
     }
-}
-
-
-void opx_pixel(int x,int y,float r,float g,float b)
-{
-  glBegin(GL_TRIANGLE_STRIP);
-    glColor3f(r,g,b);
-    glVertex3f(x-1,y-1,0);
-    glVertex3f(x+1,y-1,0);
-    glVertex3f(x+1,y+1,0);
-    glVertex3f(x-1,y+1,0);
-  glEnd();
-}
-
-void opx_cls()
-{
-  glClearColor(0,0,0,0);//clear the screen with black
-  glClear(GL_COLOR_BUFFER_BIT);
 }

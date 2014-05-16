@@ -50,9 +50,9 @@ float opx_exponentiation(float number,int power);
 //engine functions
 void opx_add_star(float x,float y,float z,float radius,float r,float g,float b,int number);
 void opx_init(int resx, int resy, int colordepth);
-void opx_render(struct opx_vector_float player,float anglexy,float anglexz, int resx, int resy,int screenshot);
+void opx_render(struct opx_vector_float player,float anglexy,float anglexz, int resx, int resy);
 
-//drawing functions
+//gfx functions
 void opx_pixel(int x,int y,float r,float g,float b);
 void opx_cls();
 
