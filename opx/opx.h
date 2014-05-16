@@ -6,7 +6,7 @@
                 //must be <12 due to technical reasons
 #define isin 7 //defines the quality of sine
 #define isqrt 7 //defines the quality of squareroot
-#define max_stars 10 //defines the max number of stars
+#define max_stars 100 //defines the max number of stars
 
 //numbers
 #define pi 3.141592654

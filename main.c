@@ -10,8 +10,8 @@ void main()
   opx_init(resolution_x,resolution_y,32,0);
 
   //creating content
-  opx_add_star(0,0,15000,700,255,255,0,0);
-  opx_add_star(5000,1500,15000,130,150,50,0,1);
+  opx_add_star(0,0,15000,700,255,255,255,0);
+  opx_add_star(5000,1500,15000,130,0,150,0,1);
 
   //creating player
   struct opx_vector_float player;
@@ -24,9 +24,6 @@ void main()
     int ltimer=SDL_GetTicks();
     int timer=0;
 
-    char *name;
-    //name=opx_name_gen(seed);
-    //printf("Universe: %s\nSeed: %ld\n",name,seed);
    while(1)
       {
 	timer=SDL_GetTicks();

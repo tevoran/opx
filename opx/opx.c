@@ -1,5 +1,6 @@
 #include "opx.h"
 #include <stdlib.h>
+#include <float.h>
 #include <SDL/SDL.h>
 
 //SDL variables
@@ -78,7 +79,7 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
   int i_stars=0; //star counter
   int r,g,b; //last colors
   float l=0; //actual object
-  float l_min=0; //nearest object
+  float l_min; //nearest object
   float anglexz_now,anglexy_now; //latest angles of the vision ray
   float anglexy_cos; //save value to save CPU time
 
@@ -101,42 +102,35 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
 
       //checking for intersection
 	//checking for stars
-	i_stars=0;
 	r=0;
 	g=0;
 	b=0;
-	l_min=0;
-        for(i_stars;i_stars<max_stars;i_stars++)
+	l_min=FLT_MAX;
+        for(i_stars=0;i_stars<max_stars;i_stars++)
 	  {
 	    if(1!=*(long*)(stars_collection+i_stars*(8*sizeof(long))))
 	      {
 		break;
 	      }
 	    l=opx_intersect_vector_star(player,vision,(stars_collection+i_stars*(8*sizeof(long))));
-	    if(l>0 && l_min==0)
+	    if(l<l_min && 0<l)
 	      {
-		r=*(int*)(stars_collection+(i_stars*8*sizeof(long))+5*sizeof(long));
-		g=*(int*)(stars_collection+(i_stars*8*sizeof(long))+6*sizeof(long));
-		b=*(int*)(stars_collection+(i_stars*8*sizeof(long))+7*sizeof(long));
-		l_min=l;
-	      }
-	    if(l<l_min)
-	      {
-		r=*(int*)(stars_collection+(i_stars*8*sizeof(long))+5*sizeof(long));
-		g=*(int*)(stars_collection+(i_stars*8*sizeof(long))+6*sizeof(long));
-		b=*(int*)(stars_collection+(i_stars*8*sizeof(long))+7*sizeof(long));
+		r=*(int*)(stars_collection+i_stars*(8*sizeof(long))+5*sizeof(long));
+		g=*(int*)(stars_collection+i_stars*(8*sizeof(long))+6*sizeof(long));
+		b=*(int*)(stars_collection+i_stars*(8*sizeof(long))+7*sizeof(long));
+		opx_pixel(x,y,r,g,b);
 		l_min=l;
 	      }
 	  }
 	  l=opx_intersect_vector_planet(player,vision,sphere);
-	  if((l_min==0 && l>0) || (l<l_min && l>0))
+	  if(l<l_min && 0<l)
 	    {
 	      l=l_min;
 	      r=sphere.color_r;
 	      g=sphere.color_g;
 	      b=sphere.color_b;
+	      opx_pixel(x,y,r,g,b);
 	    }
-      opx_pixel(x,y,r,g,b);
       //continue with next pixel
 	  x++;
 	  if(x==resx)
