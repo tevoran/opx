@@ -60,6 +60,4 @@ void opx_cls();
 float opx_intersect_vector_planet(struct opx_vector_float start,struct opx_vector_float vector,struct planet planet);
 float opx_intersect_vector_star(struct opx_vector_float start,struct opx_vector_float vector,void *stars_collection);
 
-//content
-char* opx_name_gen(long seed);
 #endif

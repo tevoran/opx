@@ -67,16 +67,6 @@ void opx_init(int resx, int resy, int colordepth)
 //all angles are in radian
 void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int resx,int resy)
 {
-  //making angles<2pi
-  while(anglexz>=2*pi)
-    {
-      anglexz=anglexz-2*pi;
-    }
-  while(anglexy>=2*pi)
-    {
-      anglexy=anglexy-2*pi;
-    }
-
   //content
   sphere.x=0;
   sphere.y=0;
@@ -87,6 +77,7 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
   sphere.color_b=250;
 
   //runtime variables
+  int star_data_length=8*sizeof(long);
   int x=0; //pixels x
   int y=0; //pixels y
   int y_update=1; //check variable if y was updated
@@ -123,16 +114,16 @@ void opx_render(struct opx_vector_float player,float anglexy,float anglexz,int r
 	l_min=FLT_MAX;
         for(i_stars=0;i_stars<max_stars;i_stars++)
 	  {
-	    if(1!=*(long*)(stars_collection+i_stars*(8*sizeof(long))))
+	    if(1!=*(long*)(stars_collection+i_stars*star_data_length))//if there is no next star then end the loop
 	      {
 		break;
 	      }
-	    l=opx_intersect_vector_star(player,vision,(stars_collection+i_stars*(8*sizeof(long))));
-	    if(l<l_min && 0<l)
+	    l=opx_intersect_vector_star(player,vision,(stars_collection+i_stars*star_data_length));
+	    if(l<l_min && 0<l)//if the current star is nearer then get the color of it
 	      {
-		r=*(float*)(stars_collection+i_stars*(8*sizeof(long))+5*sizeof(long));
-		g=*(float*)(stars_collection+i_stars*(8*sizeof(long))+6*sizeof(long));
-		b=*(float*)(stars_collection+i_stars*(8*sizeof(long))+7*sizeof(long));
+		r=*(float*)(stars_collection+i_stars*star_data_length+5*sizeof(long));
+		g=*(float*)(stars_collection+i_stars*star_data_length+6*sizeof(long));
+		b=*(float*)(stars_collection+i_stars*star_data_length+7*sizeof(long));
 		opx_pixel(x,y,r,g,b);
 		l_min=l;
 	      }

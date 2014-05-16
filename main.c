@@ -5,6 +5,11 @@
 
 void main()
 {
+  //Setting up SDL
+  SDL_Event event;
+  Uint8 *keyboard;
+  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY,1);
+
   //Setting up OPX
   long seed=434453777;
   opx_init(resolution_x,resolution_y,32);
@@ -46,7 +51,9 @@ void main()
     int ltimer=SDL_GetTicks();
     int timer=0;
 
-   while(1)
+
+    //Mainloop
+    while(1)
       {
 	timer=SDL_GetTicks();
           printf("Time per frame: %i ms\n",timer-ltimer);
@@ -55,7 +62,15 @@ void main()
 	ltimer=timer;
         opx_render(player,anglexy,anglexz,resolution_x,resolution_y);
         anglexz=anglexz+0.05;
-	//break;
+
+	//end OPX after pressing ESC
+	SDL_PollEvent(&event);
+	keyboard=SDL_GetKeyState(NULL);
+        if(keyboard[SDLK_ESCAPE])
+	  {
+	    atexit(SDL_Quit);
+	    break;
+	  }
       }
 
 }
