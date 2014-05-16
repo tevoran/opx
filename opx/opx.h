@@ -31,9 +31,9 @@
     float xs; //speed x
     float ys; //speed y
     float zs; //speed z
-    int color_r;
-    int color_g;
-    int color_b;
+    float color_r;
+    float color_g;
+    float color_b;
     int *star; //shows the adress in memory of the parent star
     int *next; //an index to the next planet in the solar system
                //if 0x0 then this planet is the last planet of the system
@@ -48,10 +48,13 @@ long long opx_factorial(int number);
 float opx_exponentiation(float number,int power);
 
 //engine functions
-void opx_add_star(float x,float y,float z,float radius,int r,int g,int b,int number);
-void opx_init(int resx, int resy, int colordepth, long seed);
+void opx_add_star(float x,float y,float z,float radius,float r,float g,float b,int number);
+void opx_init(int resx, int resy, int colordepth);
 void opx_render(struct opx_vector_float player,float anglexy,float anglexz, int resx, int resy,int screenshot);
-void opx_pixel(int x,int y,int r,int g,int b);
+
+//drawing functions
+void opx_pixel(int x,int y,float r,float g,float b);
+void opx_cls();
 
 //intersections
 float opx_intersect_vector_planet(struct opx_vector_float start,struct opx_vector_float vector,struct planet planet);

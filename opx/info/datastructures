@@ -8,6 +8,6 @@ star_collection:
 	2|(float) location y
 	3|(float) location z
 	4|(float) radius
-	5|(int) color r
-	6|(int) color g
-	7|(int) color b
+	5|(float) color r
+	6|(float) color g
+	7|(float) color b

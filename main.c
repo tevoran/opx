@@ -6,30 +6,30 @@
 void main()
 {
   //Setting up OPX
-  long seed=123456789;
-  opx_init(resolution_x,resolution_y,32,0);
+  long seed=434453777;
+  opx_init(resolution_x,resolution_y,32);
 
   //creating content
     //creating stars
-    int n=opx_random(seed)%20;
+    int n=opx_random(seed)%10;
     long new_seed=opx_random(seed);
     float x,y,z,radius;
-    int r,g,b;
+    float r,g,b;
     for(n;n>=0;n--)
       {
-	x=opx_random(new_seed)%200-100;
+	x=opx_random(new_seed)%30000-15000;
 	  new_seed=opx_random(new_seed);
-	y=opx_random(new_seed)%250-125;
+	y=opx_random(new_seed)%5000;
 	  new_seed=opx_random(new_seed);
-	z=opx_random(new_seed)%3000;
+	z=opx_random(new_seed)%30000-15000;
 	  new_seed=opx_random(new_seed);
-	radius=opx_random(new_seed)%250;
+	radius=opx_random(new_seed)%150;
 	  new_seed=opx_random(new_seed);
-	r=opx_random(new_seed)%256;
+	r=(float)((float)(opx_random(new_seed)%250)/256);
 	  new_seed=opx_random(new_seed);
-	g=opx_random(new_seed)%256;
+	g=(float)((float)(opx_random(new_seed)%150)/256);
 	  new_seed=opx_random(new_seed);
-	b=opx_random(new_seed)%256;
+	b=(float)((float)(opx_random(new_seed)%100)/256);
 	  new_seed=opx_random(new_seed);
 	opx_add_star(x,y,z,radius,r,g,b,n);
       }
@@ -38,10 +38,10 @@ void main()
   //creating player
   struct opx_vector_float player;
     player.x=0;
-    player.y=1;
-    player.z=-1;
+    player.y=0.6301;
+    player.z=0;
     float anglexz=pi/2;
-    float anglexy=0;
+    float anglexy=0.4;
 
     int ltimer=SDL_GetTicks();
     int timer=0;
@@ -54,8 +54,7 @@ void main()
 	  printf("FPS: %f\n",FPS);
 	ltimer=timer;
         opx_render(player,anglexy,anglexz,resolution_x,resolution_y,0);
-	//player.z=player.z+0.001;
-	printf("z: %f\n",player.z);
+        anglexz=anglexz+0.05;
 	//break;
       }
 

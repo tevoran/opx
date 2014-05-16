@@ -1,17 +1,24 @@
-Welcome to my project OPX.
+Hello and welcome to my project OPX.
+
+This is a little guide getting introduced
+in the development of OPX (at the moment
+it is in a quite early stage).
 
 If you want to compile this the first time,
 then you should have installed the library SDL
-and a suitable environment for gcc and make.
+and a suitable environment for OpenGL, gcc and
+make.
+For Ubuntu these are the additional packages:
+libsdl1.2-dev
+libgl1-mesa-dev
 
 After this is checked you can use the makefile.
 First type: "make first"
 Followed by: "make main" twice
-At least you can use the programm by starting
+But later compiling just needs a simple "make main"
+and at last you can use the programm by starting
 the "main" file.
-
-I will try in the future to improve my project
-for the use by others.
 
 Greetings,
 tevoran aka Johannes Pfeiffer
+16th May 2014

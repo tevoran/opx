@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-ggdb3 -lglib-2.0 `sdl-config --cflags --libs`
-CFLAGS_FAST=-O3 -march=native `sdl-config --cflags --libs` #use these flags to improve speed
+CFLAGS=-ggdb3 -lglib-2.0 `sdl-config --cflags --libs` `pkg-config gl --libs`  
+CFLAGS_FAST=-O3 -march=native `sdl-config --cflags --libs` `pkg-config gl --libs`
 SOURCES:=$(wildcard *.c)
 OPX:=$(wildcard opx/*.c)
 OBJECTS:=$(wildcard obj/*.o)
