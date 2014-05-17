@@ -3,7 +3,7 @@ In this file is the documentation of the different data structures.
 
 star_collection:
 	//the numbers counts in longs
-	0|shows if star is present (1==present)
+	0|(long)shows if star is present (1==present)
 	1|(float) location x
 	2|(float) location y
 	3|(float) location z
@@ -11,3 +11,23 @@ star_collection:
 	5|(float) color r
 	6|(float) color g
 	7|(float) color b
+
+planets_system:
+	//the numbers count in longs
+	0|(long)shows the number of the star
+	1|(float) location x
+	2|(float) location y
+	3|(float) location z
+	4|(float) radius
+	5|(float) color r
+	6|(float) color g
+	7|(float) color b
+	8|(float) speed x //the speed per second
+	9|(float) speed y
+	10|(float) speed z
+
+render_bubble:
+	//uses int to count
+	0|the number of a star inside the bubble
+	
+	//if number==max_stars+1 then there is no star left
