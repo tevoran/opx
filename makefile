@@ -1,6 +1,5 @@
-CC=gcc
-CFLAGS=-ggdb3 -lglib-2.0 `sdl-config --cflags --libs` `pkg-config gl --libs`  
-CFLAGS_FAST=-O3 -march=native `sdl-config --cflags --libs` `pkg-config gl --libs`
+CC=gcc 
+CFLAGS=-O3 -march=native -l OpenCL -I /opt/AMDAPP/include/ `sdl-config --cflags --libs` `pkg-config gl --libs`
 SOURCES:=$(wildcard *.c)
 OPX:=$(wildcard opx/*.c)
 OBJECTS:=$(wildcard obj/*.o)
@@ -11,18 +10,18 @@ first :
 	mkdir screenshots
 
 main : main_ opx_
-	$(CC) $(OBJECTS) -o main $(CFLAGS_FAST) 
+	$(CC) $(OBJECTS) -o main $(CFLAGS) 
 
 main_ : $(SOURCES)
-	$(CC) $(SOURCES) -c $(CFLAGS_FAST) 
+	$(CC) $(SOURCES) -c $(CFLAGS) 
 
 opx_ : $(OPX)
-	$(CC) $(OPX) -c $(CFLAGS_FAST) 
+	$(CC) $(OPX) -c $(CFLAGS) 
 	@mv *.o obj/
 
 .PHONY : clean clean_main
 clean :
-	rm $(OBJECTS)
+	rm $(OBJECTS) $(OBJECTS_OPX)
 
 clean_main :
 	rm main

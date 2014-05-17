@@ -41,7 +41,7 @@ void opx_add_star(float x,float y,float z,float radius,float r,float g,float b,i
 void opx_init(int resx, int resy, int colordepth)
 {
   //activating SDL
-    printf("OPX: Init SDL...");
+    printf("OPX: init SDL...");
   SDL_Init(SDL_INIT_VIDEO);
     printf("done\n");
 
@@ -49,6 +49,12 @@ void opx_init(int resx, int resy, int colordepth)
     printf("OPX: activating OpenGL doublebuffer...");
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
     printf("done\n");
+
+  //activating OpenCL
+    printf("OPX: init OpenCL...");
+  opx_init_opencl();
+    printf("done\n");
+
 
   //set screen mode
     printf("OPX: setting screen video mode...");

@@ -7,7 +7,7 @@
 #define isin 7 //defines the quality of sine
 #define isqrt 7 //defines the quality of squareroot
 #define max_stars 1000000 //defines the max number of stars
-#define render_bubble_radius 700000 //defines the radius of a bubble where stars are raytraced
+#define render_bubble_radius 500000 //defines the radius of a bubble where stars are raytraced
 
 //numbers
 #define pi 3.141592654
@@ -51,6 +51,7 @@ float opx_exponentiation(float number,int power);
 //engine functions
 void opx_add_star(float x,float y,float z,float radius,float r,float g,float b,int number);
 void opx_init(int resx, int resy, int colordepth);
+void opx_init_opencl();
 void opx_render(struct opx_vector_float player,float anglexy,float anglexz, int resx, int resy);
 void opx_update_bubble(struct opx_vector_float player);
 

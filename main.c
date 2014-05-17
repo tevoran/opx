@@ -50,7 +50,6 @@ void main()
     int ltimer=SDL_GetTicks();
     int timer=0;
 
-    opx_update_bubble(player);
     //Mainloop
     while(1)
       {
@@ -60,9 +59,11 @@ void main()
 	  printf("FPS: %f\n",FPS);
 	ltimer=timer;
 
-        //opx_update_bubble(player);
+        opx_update_bubble(player);
         opx_render(player,anglexy,anglexz,resolution_x,resolution_y);
-        anglexz=anglexz+0.05;
+        //anglexz=anglexz+0.05;
+	player.z=player.z+100;
+
 
 	//end OPX after pressing ESC
 	SDL_PollEvent(&event);
