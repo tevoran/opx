@@ -7,7 +7,7 @@
 #define isin 7 //defines the quality of sine
 #define isqrt 7 //defines the quality of squareroot
 #define max_stars 1000000 //defines the max number of stars
-#define render_bubble_radius 500000 //defines the radius of a bubble where stars are raytraced
+#define render_bubble_radius 550000 //defines the radius of a bubble where stars are raytraced
 
 //numbers
 #define pi 3.141592654
