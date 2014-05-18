@@ -20,6 +20,10 @@ cl_program program;
 //cl kernels
 cl_kernel kernel_vectoraddition;
 
+//item sizes
+size_t global_item_size=1;
+size_t local_item_size=1;
+
 void opx_init_opencl()
 {
   cl_int ret;//variable for error codes
@@ -132,5 +136,12 @@ void opx_init_opencl()
     if(ret==CL_INVALID_KERNEL_NAME)
       {
 	printf("the kernel name was not found\n");
+      }
+
+    //execute kernel
+    ret=clEnqueueNDRangeKernel(command_queue,kernel_vectoraddition,1,NULL,&global_item_size,&local_item_size,0,NULL,NULL);
+    if(ret==CL_SUCCESS)
+      {
+	printf("successfull first started kernel\n");
       }
 }
