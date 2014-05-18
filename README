@@ -6,9 +6,10 @@ it is in a quite early stage).
 
 If you want to compile this the first time,
 then you should have installed the library SDL
-and a suitable environment for OpenGL, gcc and
-make.
+and a suitable environment for OpenCL
+(i.e. AMD-APP-SDK),OpenGL, gcc and make.
 For Ubuntu these are the additional packages:
+build-essential
 libsdl1.2-dev
 libgl1-mesa-dev
 
