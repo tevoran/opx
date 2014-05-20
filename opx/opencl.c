@@ -21,6 +21,7 @@ cl_program program;
 cl_kernel kernel_vectoraddition;
 
 //item sizes
+size_t max_workgroup_size;
 size_t global_item_size=1;
 size_t local_item_size=1;
 
@@ -53,6 +54,8 @@ void opx_init_opencl()
   clGetDeviceInfo(device_id,CL_DEVICE_MAX_COMPUTE_UNITS,sizeof(cl_int),&ret,NULL);
   printf("\n    Number of maximal compute units: %i\n",ret);
 
+  clGetDeviceInfo(device_id,CL_DEVICE_MAX_WORK_GROUP_SIZE,sizeof(size_t),&max_workgroup_size,NULL);
+  printf("    max workgroup size is: %i\n",(int)max_workgroup_size);
 
   //creating context
   context=clCreateContext(NULL,1,&device_id,NULL,NULL,&ret);
