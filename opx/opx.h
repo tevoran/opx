@@ -1,6 +1,8 @@
 #ifndef OPX_H
 #define OPX_H
 
+#include <CL/cl.h> //included for data type cl_int
+
 //quality
 #define icos 7 //defines the quality of cosine
                 //must be <12 due to technical reasons
@@ -63,4 +65,6 @@ void opx_cls();
 float opx_intersect_vector_planet(struct opx_vector_float start,struct opx_vector_float vector,struct planet planet);
 float opx_intersect_vector_star(struct opx_vector_float start,struct opx_vector_float vector,void *stars_collection);
 
+//opx opencl functions
+void opx_cl_error(cl_int ret,const char *error_msg); //for error messages
 #endif
