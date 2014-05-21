@@ -1,3 +1,4 @@
-__kernel void vectoraddition()
+__kernel void vectoraddition(global float *out)
 {
+	*out=5;
 }

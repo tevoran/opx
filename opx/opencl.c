@@ -142,9 +142,21 @@ void opx_init_opencl()
       }
 
     //execute kernel
-    ret=clEnqueueNDRangeKernel(command_queue,kernel_vectoraddition,1,NULL,&global_item_size,&local_item_size,0,NULL,NULL);
+    float c=0;
+    cl_mem d=clCreateBuffer(context,CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,sizeof(float),&c,&ret);
+
+    ret=clSetKernelArg(kernel_vectoraddition,0,sizeof(d),&d);
+
+    ret=clEnqueueNDRangeKernel(command_queue,kernel_vectoraddition,1,0,&global_item_size,&local_item_size,0,NULL,NULL);
     if(ret==CL_SUCCESS)
       {
 	printf("successfull first started kernel\n");
       }
+
+    ret=clEnqueueReadBuffer(command_queue,d,CL_TRUE,0,sizeof(float),&c,0,NULL,NULL);
+    if(ret==CL_SUCCESS)
+      {
+	printf("successfully read\n");
+      }
+    printf("c: %f\n",c);
 }
