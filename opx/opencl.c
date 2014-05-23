@@ -1,5 +1,6 @@
 #include "opx.h"
 #include <stdio.h>
+#include <SDL/SDL.h>
 #include <CL/cl.h>
 
 //platform and device information variables
@@ -32,9 +33,12 @@ void opx_init_opencl()
   size_t kernel_size;
   char *vectoraddition_src;
 
+  //repitions variable
+  int i;
+
   //getting platformids
   ret=clGetPlatformIDs(1,&platform_id,&num_platforms);
-  opx_cl_error(ret,"OpenCL error while getting platform ids\n");
+  opx_cl_error(ret,"OpenCL error while getting platform IDs\n");
 
   //getting deviceids
   ret=clGetDeviceIDs(platform_id,CL_DEVICE_TYPE_GPU,1,&device_id,&num_devices);
@@ -42,17 +46,16 @@ void opx_init_opencl()
 
   //getting information about the device
   clGetDeviceInfo(device_id,CL_DEVICE_MAX_COMPUTE_UNITS,sizeof(cl_int),&ret,NULL);
-  printf("\n    Number of maximal compute units: %i\n",ret);
-
+    printf("\n    Number of maximal compute units: %i\n",ret);
   clGetDeviceInfo(device_id,CL_DEVICE_MAX_WORK_GROUP_SIZE,sizeof(size_t),&max_workgroup_size,NULL);
-  printf("    max workgroup size is: %i\n",(int)max_workgroup_size);
+    printf("    max workgroup size is: %i\n",(int)max_workgroup_size);
 
   //creating context
-  context=clCreateContext(NULL,1,&device_id,NULL,NULL,&ret);
+  context=clCreateContext(NULL,num_devices,&device_id,NULL,NULL,&ret);
   opx_cl_error(ret,"OpenCL error while creating a context\n");
 
   //creating command queue
-  command_queue=clCreateCommandQueue(context,device_id,0,&ret);
+  command_queue=clCreateCommandQueue(context,device_id,CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE,&ret);
   opx_cl_error(ret,"OpenCL error while creating a command queue\n");
 
   //creating kernels from opx/kernels/
@@ -69,11 +72,17 @@ void opx_init_opencl()
 
       printf("    kernel_size: %i\n",(int)kernel_size);
       fclose(kernel_file);//close FILE pointer;
-    program=clCreateProgramWithSource(context,1,(const char**)&vectoraddition_src,NULL,&ret);
+      program=clCreateProgramWithSource(context,1,(const char**)&vectoraddition_src,NULL,&ret);
     opx_cl_error(ret,"OpenCL error while creating program\n");
 
-    ret=clBuildProgram(program,1,&device_id,NULL,NULL,NULL);
+    ret=clBuildProgram(program,num_devices,&device_id,"-w -Werror",NULL,NULL);
     opx_cl_error(ret,"OpenCL error while building program\n");
+    if(ret!=CL_SUCCESS)
+      {
+	char build_log[10000];//show max 10000bytes of a return message
+	clGetProgramBuildInfo(program,device_id,CL_PROGRAM_BUILD_LOG,(size_t)10000,&build_log,NULL);
+	printf("%s\n",build_log);
+      }
 
     kernel_vectoraddition=clCreateKernel(program,"vectoraddition",&ret);
     opx_cl_error(ret,"OpenCL error while creating kernel 'vectoraddition'\n");

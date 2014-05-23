@@ -58,8 +58,12 @@ void main()
 	  float FPS=(float)(float)1000/(float)(timer-ltimer);
 	  printf("FPS: %f\n",FPS);
 	ltimer=timer;
+	printf("MR: %f\n",((800*800*2550*FPS)/1000000));
 
         opx_update_bubble(player);
+
+	break;
+
         opx_render(player,anglexy,anglexz,resolution_x,resolution_y);
         //anglexz=anglexz+0.05;
 	player.z=player.z+100;
