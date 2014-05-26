@@ -1,23 +1,23 @@
 CC=gcc 
 CFLAGS=-O3 -march=native -l OpenCL -I /opt/AMDAPP/include/ `sdl-config --cflags --libs` `pkg-config gl --libs`
-SOURCES:=$(wildcard *.c)
-OPX:=$(wildcard opx/*.c)
-OBJECTS:=$(wildcard obj/*.o)
-OBJECTS_OPX:=$(wildcard *.o)
+SOURCES:=$(wildcard *.c) $(wildcard opx/*.c)
+OBJECTS=$(patsubst %.c,obj/%.o,$(wildcard $(SOURCES)))
 
-first :
-	mkdir obj
-	mkdir screenshots
 
-main : main_ opx_
-	$(CC) $(OBJECTS) -o main $(CFLAGS) 
+all : main
 
-main_ : $(SOURCES)
-	$(CC) $(SOURCES) -c $(CFLAGS) 
+main : $(OBJECTS)
+	[ -d obj/opx ] || mkdir -p obj/opx
+	[ -d screenshots ] || mkdir screenshots
+	echo $(SOURCES)
+	echo $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $<
 
-opx_ : $(OPX)
-	$(CC) $(OPX) -c $(CFLAGS) 
-	@mv *.o obj/
+obj/%.o: %.c
+obj/opx/%.o: opx/%.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
 
 .PHONY : clean clean_main
 clean :
