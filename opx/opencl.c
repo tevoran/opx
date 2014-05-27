@@ -17,9 +17,11 @@ cl_command_queue command_queue;
 
 //cl program
 cl_program program;
+cl_program program_sine;
 
 //cl kernels
 cl_kernel kernel_vectoraddition;
+cl_kernel kernel_sine;
 
 //item sizes
 size_t max_workgroup_size;
@@ -32,6 +34,7 @@ void opx_init_opencl()
   FILE *kernel_file;
   size_t kernel_size;
   char *vectoraddition_src;
+  char *sine_src;
 
   //repitions variable
   int i;
@@ -72,6 +75,7 @@ void opx_init_opencl()
 
       printf("    kernel_size: %i\n",(int)kernel_size);
       fclose(kernel_file);//close FILE pointer;
+      //compile kernel
       program=clCreateProgramWithSource(context,1,(const char**)&vectoraddition_src,NULL,&ret);
     opx_cl_error(ret,"OpenCL error while creating program\n");
 
@@ -80,12 +84,41 @@ void opx_init_opencl()
     if(ret!=CL_SUCCESS)
       {
 	char build_log[10000];//show max 10000bytes of a return message
+
 	clGetProgramBuildInfo(program,device_id,CL_PROGRAM_BUILD_LOG,(size_t)10000,&build_log,NULL);
 	printf("%s\n",build_log);
       }
 
     kernel_vectoraddition=clCreateKernel(program,"vectoraddition",&ret);
     opx_cl_error(ret,"OpenCL error while creating kernel 'vectoraddition'\n");
+
+    //sine
+    printf("    loading kernel: opx/kernels/sine.cl\n");
+    kernel_file=fopen("opx/kernels/sine.cl","r");
+
+      //allocate memory for the src
+      fseek(kernel_file,0,SEEK_END);
+      kernel_size=ftell(kernel_file);
+      fseek(kernel_file,0,SEEK_SET);
+      sine_src=malloc(kernel_size+1);
+
+    kernel_size=fread(sine_src,1,kernel_size,kernel_file);
+      printf("    kernel_size: %i\n",(int)kernel_size);
+      fclose(kernel_file);
+
+      //compile program
+      program_sine=clCreateProgramWithSource(context,1,(const char**)&sine_src,NULL,&ret);
+        opx_cl_error(ret,"OpenCL error while building program of kernel: sine\n");
+      ret=clBuildProgram(program_sine,num_devices,&device_id,"-w -Werror",NULL,NULL);
+        opx_cl_error(ret,"OpenCL error while building program of kernel: sine\n");
+	if(ret!=CL_SUCCESS)//show compiler response if there is an error
+	  {
+	    char build_log[10000];//show max 10000bytes of a return message
+	    clGetProgramBuildInfo(program,device_id,CL_PROGRAM_BUILD_LOG,(size_t)10000,&build_log,NULL);
+	    printf("%s\n",build_log);
+	  }									        
+      kernel_sine=clCreateKernel(program_sine,"sine",&ret);
+        opx_cl_error(ret,"OpenCL error while creating kernel: sine\n");
 }
 
 void opx_cl_error(cl_int ret,const char *error_msg)
@@ -95,6 +128,7 @@ void opx_cl_error(cl_int ret,const char *error_msg)
       printf("%s",error_msg);
     }
 }
+
 
 //functions that use opencl
 //addition of in1 and in2 to out
