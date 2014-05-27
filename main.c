@@ -69,7 +69,7 @@ void main()
 	float out;
 	int count=1;
 	printf("test\n");
-	opx_vector_add(in1,in2,out,count);
+	out=opx_vector_add(in1,in2,out,count);
 	printf("test: %f\n",out);
 	break;
 

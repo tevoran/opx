@@ -98,9 +98,10 @@ void opx_cl_error(cl_int ret,const char *error_msg)
 
 //functions that use opencl
 //addition of in1 and in2 to out
-void opx_vector_add(float in1,float in2,float out,int count)
+float opx_vector_add(float in1,float in2,float out,int count)
 {
   cl_int ret;
+  float out2;
 
   //creating buffers
   cl_mem in1_buff=clCreateBuffer(context,CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,(sizeof(float)*count),&in1,&ret);
@@ -119,7 +120,12 @@ void opx_vector_add(float in1,float in2,float out,int count)
     opx_cl_error(ret,"ERROR while setting kernel argument 2\n");
 
   //execute kernel
-    ret=clEnqueueNDRangeKernel(command_queue,kernel_vectoraddition,1,NULL,1,0,0,0,0);
+  ret=clEnqueueNDRangeKernel(command_queue,kernel_vectoraddition,1,NULL,(const size_t *)&global_item_size,NULL,0,NULL,NULL);
     opx_cl_error(ret,"ERROR while executing kernel\n");
 
+  //read buffer
+  ret=clEnqueueReadBuffer(command_queue,out_buff,CL_TRUE,0,sizeof(float),&out2,0,NULL,NULL);
+    opx_cl_error(ret,"ERROR while reading buffer\n");
+
+  return out2;
 }
