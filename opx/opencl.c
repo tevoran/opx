@@ -86,19 +86,6 @@ void opx_init_opencl()
 
     kernel_vectoraddition=clCreateKernel(program,"vectoraddition",&ret);
     opx_cl_error(ret,"OpenCL error while creating kernel 'vectoraddition'\n");
-
-    //execute kernel
-    float c=0;
-    cl_mem d=clCreateBuffer(context,CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,sizeof(float),&c,&ret);
-
-    ret=clSetKernelArg(kernel_vectoraddition,0,sizeof(d),&d);
-
-    ret=clEnqueueNDRangeKernel(command_queue,kernel_vectoraddition,1,0,&global_item_size,&local_item_size,0,NULL,NULL);
-    opx_cl_error(ret,"error while executing kernel\n");
-
-    ret=clEnqueueReadBuffer(command_queue,d,CL_TRUE,0,sizeof(float),&c,0,NULL,NULL);
-    opx_cl_error(ret,"not successfully read from buffer\n");
-    printf("c: %f\n",c);
 }
 
 void opx_cl_error(cl_int ret,const char *error_msg)
@@ -107,4 +94,32 @@ void opx_cl_error(cl_int ret,const char *error_msg)
     {
       printf("%s",error_msg);
     }
+}
+
+//functions that use opencl
+//addition of in1 and in2 to out
+void opx_vector_add(float in1,float in2,float out,int count)
+{
+  cl_int ret;
+
+  //creating buffers
+  cl_mem in1_buff=clCreateBuffer(context,CL_MEM_READ_WRITE|CL_MEM_USE_HOST_PTR,(sizeof(float)*count),&in1,&ret);
+  opx_cl_error(ret,"ERROR while creating in1 buffer\n");
+  cl_mem in2_buff=clCreateBuffer(context,CL_MEM_READ_WRITE|CL_MEM_COPY_HOST_PTR,sizeof(float)*count,&in2,&ret);
+  opx_cl_error(ret,"ERROR while creating in2 buffer\n");
+  cl_mem out_buff=clCreateBuffer(context,CL_MEM_READ_WRITE|CL_MEM_COPY_HOST_PTR,sizeof(float)*count,&out,&ret);
+  opx_cl_error(ret,"ERROR while creating out buffer\n");
+
+  //setting kernel arguments
+  ret=clSetKernelArg(kernel_vectoraddition,0,(size_t)sizeof(cl_mem),(void*)&in1_buff);
+    opx_cl_error(ret,"ERROR while setting kernel argument 0\n");
+  ret=clSetKernelArg(kernel_vectoraddition,1,(size_t)sizeof(cl_mem),(void*)&in2_buff);
+    opx_cl_error(ret,"ERROR while setting kernel argument 1\n");
+  ret=clSetKernelArg(kernel_vectoraddition,2,(size_t)sizeof(cl_mem),(void*)&out_buff);
+    opx_cl_error(ret,"ERROR while setting kernel argument 2\n");
+
+  //execute kernel
+    ret=clEnqueueNDRangeKernel(command_queue,kernel_vectoraddition,1,NULL,1,0,0,0,0);
+    opx_cl_error(ret,"ERROR while executing kernel\n");
+
 }

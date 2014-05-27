@@ -62,6 +62,15 @@ void main()
 
         opx_update_bubble(player);
 
+	float in1;
+	in1=1;
+	float in2;
+	in2=2;
+	float out;
+	int count=1;
+	printf("test\n");
+	opx_vector_add(in1,in2,out,count);
+	printf("test: %f\n",out);
 	break;
 
         opx_render(player,anglexy,anglexz,resolution_x,resolution_y);

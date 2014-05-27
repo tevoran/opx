@@ -67,4 +67,5 @@ float opx_intersect_vector_star(struct opx_vector_float start,struct opx_vector_
 
 //opx opencl functions
 void opx_cl_error(cl_int ret,const char *error_msg); //for error messages
+void opx_vector_add(float in1,float in2,float out,int count);
 #endif
